@@ -63,7 +63,7 @@ Complementing the image management functionality is the `OTAlgorithm` abstract b
 
 ## Command-line interface (CLI)
 Each of the aformentioned algorithms can be executed through the command line. The CLI interface in this project serves as a flexible bridge between users and the core image processing algorithms, enabling command-line execution and configuration of complex workflows. At its foundation, the CLI is built around a generic base class that handles argument parsing, input validation, and algorithm instantiation. Each algorithm-specific module, such as those for OpenCV optical flow, phase cross-correlation, or scikit-image methods, extends this base class to introduce tailored command-line options reflecting the parameters and features of the underlying algorithm. Users interact with these modules by specifying arguments directly in the terminal, which are then parsed and mapped to the corresponding algorithm’s configuration.
-The general workflow involves:
+The general workflow involves:  
    1. Parse command-line arguments.
    2. Load reference and target images.
    3. Coregistration
@@ -71,12 +71,13 @@ The general workflow involves:
    5. Run the selected offset-tracking algorithm.
    6. Export the displacement results to the specified output file.
 This design streamlines batch processing and reproducible analysis, allowing users to switch between different algorithms or parameter sets with minimal effort. The CLI modules that depend on cli.py inherit its structure, ensuring consistent behavior and a unified user experience across the toolkit.
-## Additional sub-packages
-The `snap_gpt` sub-package is designed to facilitate the interaction with the SNAP Graph Processing Tool, a widely used platform for satellite image analysis. By providing programmatic access to SNAP’s capabilities, this module enables users to automate complex processing chains, manage graph-based workflows, and integrate SNAP’s advanced algorithms into custom remote sensing pipelines. Its architecture supports the orchestration of preprocessing, calibration, and product generation tasks, making it a valuable asset for large-scale and reproducible satellite data analysis.
 
-The `sentinel` sub-package is specialized for handling data from the Sentinel satellite missions, which are part of the Copernicus program. It offers a comprehensive set of tools for reading, preprocessing, and analyzing Sentinel imagery, with routines tailored to the unique formats and metadata structures of these datasets. The module streamlines common operations such as radiometric correction, geometric alignment, and feature extraction, ensuring that users can efficiently prepare Sentinel data for further scientific or operational use.
+## Additional modules  
+The `snap_gpt` module is designed to facilitate the interaction with the SNAP Graph Processing Tool, a widely used platform for satellite image analysis. By providing programmatic access to SNAP’s capabilities, this module enables users to automate complex processing chains, manage graph-based workflows, and integrate SNAP’s advanced algorithms into custom remote sensing pipelines. Its architecture supports the orchestration of preprocessing, calibration, and product generation tasks, making it a valuable asset for large-scale and reproducible satellite data analysis.
 
-The `prisma` sub-package focuses on the PRISMA hyperspectral satellite, providing dedicated functions for extracting and manipulating its spectral information. It supports the retrieval of hyperspectral cubes, metadata parsing, and the transformation of raw data into analysis-ready products.
+The `sentinel` module is specialized for handling data from the Sentinel satellite missions, which are part of the Copernicus program. It offers a comprehensive set of tools for reading, preprocessing, and analyzing Sentinel imagery, with routines tailored to the unique formats and metadata structures of these datasets. The module streamlines common operations such as radiometric correction, geometric alignment, and feature extraction, ensuring that users can efficiently prepare Sentinel data for further scientific or operational use.
+
+The `prisma` module focuses on the PRISMA hyperspectral satellite, providing dedicated functions for extracting and manipulating its spectral information. It supports the retrieval of hyperspectral cubes, metadata parsing, and the transformation of raw data into analysis-ready products.
 
 # Acknowledgements
 
