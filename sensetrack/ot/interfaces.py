@@ -1,40 +1,22 @@
 """
-Module: interfaces
+# interfaces
 
 This module defines core classes and utilities for handling multi-band images and implementing optical tracking algorithms.
 
 Classes:
     - Image: Represents an image with multiple bands, including georeferencing and nodata handling.
     - OTAlgorithm: Abstract base class for optical tracking algorithms, providing serialization and utility methods.
-
-Functions and Methods:
-    - Image.__init__: Initializes an Image instance with image data, affine transform, CRS, and nodata value.
-    - Image.__new__: Allocates a new Image instance.
-    - Image.__repr__: Returns a string representation of the Image.
-    - Image.__len__: Returns the number of bands in the image.
-    - Image.__iter__: Iterates over the image bands.
-    - Image.__getitem__: Retrieves a specific band by index.
-    - Image.__get_bandnames: Returns a tuple of band names.
-    - Image.split_channels: Splits the image into its individual channels.
-    - Image.is_coregistered: Checks if another image is coregistered with this one.
-    - Image.get_band: Retrieves a specific band as a new Image instance.
-    - OTAlgorithm: Abstract class for algorithm implementation.
-    - OTAlgorithm.from_dict: Instantiates an algorithm from a dictionary.
-    - OTAlgorithm.from_JSON: Instantiates an algorithm from a JSON file.
-    - OTAlgorithm.from_YAML: Instantiates an algorithm from a YAML file.
-    - OTAlgorithm.toJSON: Serializes the algorithm parameters to a JSON file.
-    - OTAlgorithm._to_displacements: Converts pixel offsets to physical displacements.
-    - OTAlgorithm.__call__: Abstract method for running the algorithm.
 """
+
 import json
 from abc import ABC
 from inspect import signature
 from pathlib import Path
+from typing import Any
 
 import cv2
 import numpy as np
-from rasterio import Affine
-from rasterio import CRS
+from rasterio import CRS, Affine
 
 from sensetrack.log import setup_logger
 
@@ -44,9 +26,9 @@ logger = setup_logger(__name__)
 class Image:
     """
     Class representing an image with multiple bands.
-    
-    This class provides functionality for handling multi-band images with georeferencing 
-    information and nodata value handling. It supports operations like band splitting, 
+
+    This class provides functionality for handling multi-band images with georeferencing
+    information and nodata value handling. It supports operations like band splitting,
     coregistration checking, and individual band access.
 
     Attributes:
@@ -56,8 +38,10 @@ class Image:
         nodata (int | float): Value used to represent no data in the image
         bandnames (tuple): Names of the image bands
     """
-    def __init__(self, image: np.ndarray, affine: Affine,
-                 crs: str, nodata: float | None = None) -> None:
+
+    def __init__(
+        self, image: np.ndarray, affine: Affine, crs: str, nodata: float | None = None
+    ) -> None:
         """
         Initialize an Image instance.
 
@@ -81,16 +65,18 @@ class Image:
             setattr(self, bandname, band_array)
 
         self._affine = affine
-        self._crs = CRS.from_string(crs)
+        self._crs = crs
 
         if nodata is None:
-            image[image < 0] = -9999.
-            self._nodata = -9999.9
-            logger.debug(f"Inferring/setting nodata values: {nodata = :.1f}")
+            image[image < 0] = 0.0
+            self._nodata = 0.0
+            logger.debug(f"Inferring/setting nodata values: {self._nodata = :.1f}")
         else:
             self._nodata = nodata
 
-    def __new__(cls, image: np.ndarray, affine: Affine, crs: str, nodata: float = -9999.):
+    def __new__(
+        cls, image: np.ndarray, affine: Affine, crs: str, nodata: float = -9999.0
+    ):
         """
         Allocate a new Image instance.
 
@@ -106,7 +92,7 @@ class Image:
         obj = super().__new__(cls)
         obj.image = image
         obj.affine = affine
-        obj.crs = CRS.from_string(crs)
+        obj.crs = crs
         obj.nodata = nodata
         return obj
 
@@ -190,7 +176,7 @@ class Image:
         if self.n_channels == 2:
             return 1
         elif self.image is not None:
-            return self.image.shape[self.n_channels-1]
+            return self.image.shape[self.n_channels - 1]
 
     @property
     def mask(self) -> np.ndarray:
@@ -262,35 +248,10 @@ class Image:
         if all([self.affine is not None, __other.affine is not None]):
             return self.affine == __other.affine
         elif any([self.affine is not None, __other.affine is not None]):
-            raise ValueError(
-                "One of the images lacks georeferencing information")
+            raise ValueError("One of the images lacks georeferencing information")
         else:
-            Warning(
-                "Coregistration check for non-raster images is approximate.")
+            Warning("Coregistration check for non-raster images is approximate.")
             return self.shape == __other.shape
-
-
-def get_band(image: Image, n: str | int = 0) -> Image | None:
-    """
-    Get a specific band from the image.
-
-    Args:
-        n (str | int | None): Band identifier. Can be band name (str), 
-                                index (int), or None for entire image
-
-    Returns:
-        Image: New Image instance containing the requested band
-    """
-    if isinstance(n, str):
-        band = image.__getattribute__(n)
-        return Image(band, image.affine, image.crs, image.nodata)
-
-    elif isinstance(n, int):
-        band = image[n]
-        return Image(band, image.affine, image.crs, image.nodata)
-
-    else:
-        return
 
 
 class OTAlgorithm(ABC):
@@ -302,7 +263,7 @@ class OTAlgorithm(ABC):
     converting pixel offsets to physical displacements.
     """
 
-    library: str = 'Undefined'
+    library: str = "Undefined"
 
     @classmethod
     def from_dict(cls, __d: dict):
@@ -317,8 +278,11 @@ class OTAlgorithm(ABC):
         """
         keys = list(signature(cls.__init__).parameters.keys())
 
-        kw = {key: value for key, value in __d.items()
-              if key in keys and value is not None}
+        kw = {
+            key: value
+            for key, value in __d.items()
+            if key in keys and value is not None
+        }
 
         return cls(**kw)
 
@@ -360,6 +324,7 @@ class OTAlgorithm(ABC):
             FileNotFoundError: If the YAML file does not exist
         """
         import yaml
+
         path = Path(__yaml)
 
         if not path.is_file():
@@ -386,7 +351,9 @@ class OTAlgorithm(ABC):
 
         Path(file).write_text(json.dumps(parms, indent=4))
 
-    def _to_displacements(self, transform, pixel_offsets) -> np.ndarray:
+    def _to_displacements(
+        self, transform, pixel_offsets
+    ) -> tuple[np.ndarray, np.ndarray]:
         """
         Convert pixel offsets to physical displacements.
 
@@ -406,6 +373,6 @@ class OTAlgorithm(ABC):
         px, py = pixel_offsets.T
         dxx, dyy = px.T * pxt, py.T * pyt
 
-        return np.linalg.norm([dxx, dyy], axis=0)
+        return dxx, dyy
 
-    def __call__(self, *args, **kwargs): ...
+    def __call__(self, *args, **kwargs) -> Any: ...
