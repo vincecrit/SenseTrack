@@ -6,23 +6,25 @@ authors:
     affiliation: 1
   - name: Melissa Tondo
     orcid: 0009-0008-4511-1448
-    affiliation: 1
+    affiliation: 2
   - name: Cecilia Fabbiani
     orcid: 0009-0003-4963-7002
-    affiliation: 1
+    affiliation: 2
   - name: Francesco Lelli
     orcid: 0009-0004-1831-1736
-    affiliation: 1
+    affiliation: 2
   - name: Marco Mulas
     orcid: 0000-0002-4682-9047
-    affiliation: 1
+    affiliation: 2
   - name: Alessandro Corsini
     orcid: 0000-0003-3718-7748
-    affiliation: 1
+    affiliation: 2
 affiliations:
-  - name: University of Modena and Reggio Emilia - Chemical and Geological Sciences Department
+  - name: Po River Basin District Authority - Hydraulic and geological risk assessment and management area
     index: 1
-date: 2025-09-16
+  - name: University of Modena and Reggio Emilia - Chemical and Geological Sciences Department
+    index: 2
+date: 2026-01-29
 bibliography: paper.bib
 ---
 
