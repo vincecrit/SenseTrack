@@ -64,12 +64,12 @@ Complementing the image management functionality is the `OTAlgorithm` abstract b
 ## Command-line interface (CLI)
 Each of the aformentioned algorithms can be executed through the command line. The CLI interface in this project serves as a flexible bridge between users and the core image processing algorithms, enabling command-line execution and configuration of complex workflows. At its foundation, the CLI is built around a generic base class that handles argument parsing, input validation, and algorithm instantiation. Each algorithm-specific module, such as those for OpenCV optical flow, phase cross-correlation, or scikit-image methods, extends this base class to introduce tailored command-line options reflecting the parameters and features of the underlying algorithm. Users interact with these modules by specifying arguments directly in the terminal, which are then parsed and mapped to the corresponding algorithm’s configuration.
 The general workflow involves:  
-   1. Parse command-line arguments.
-   2. Load reference and target images.
-   3. Coregistration
-   4. Preprocessing
-   5. Run the selected offset-tracking algorithm.
-   6. Export the displacement results to the specified output file.
+   1. Parse command-line arguments  
+   2. Load reference and target images  
+   3. Coregistration  
+   4. Preprocessing  
+   5. Run the selected offset-tracking algorithm  
+   6. Export the displacement results to the specified output file  
 This design streamlines batch processing and reproducible analysis, allowing users to switch between different algorithms or parameter sets with minimal effort. The CLI modules that depend on cli.py inherit its structure, ensuring consistent behavior and a unified user experience across the toolkit.
 
 ## Additional modules  
